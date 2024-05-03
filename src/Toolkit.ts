@@ -7,6 +7,7 @@ import {
   SmartContract,
   UInt32,
   fetchAccount,
+
 } from 'o1js';
 
 export class Toolkit {
@@ -46,22 +47,22 @@ export class Toolkit {
     console.log('Sending the transaction.');
     let pendingTx = await sentTx.sign(keys).send();
 
-    if (pendingTx.hash() !== undefined) {
+    if (pendingTx.hash !== undefined) {
       console.log(`Success! Update transaction sent.
           Your smart contract state will be updated
           as soon as the transaction is included in a block.
-          Txn hash: ${pendingTx.hash()}
+          Txn hash: ${pendingTx.hash}
           `);
     }
 
     console.log('Waiting for transaction inclusion in a block.');
     await pendingTx.wait({ maxAttempts: 90 });
 
-    if (pendingTx?.hash() !== undefined) {
+    if (pendingTx?.hash !== undefined) {
       console.log(`Success! ${tag} transaction sent.
           Your smart contract state will be updated
           as soon as the transaction is included in a block:
-          ${this.getTxnUrl(config.network.mina, pendingTx.hash())}
+          ${this.getTxnUrl(config.network.mina, pendingTx.hash)}
           `);
     }
   }
@@ -219,9 +220,9 @@ export class Toolkit {
     console.log('\n\n====== DEPLOYING ======\n\n');
     const sentTx = await Mina.transaction(
       { sender: feePayerKey.toPublicKey(), fee: config.fee },
-      () => {
+      async () => {
         AccountUpdate.fundNewAccount(feePayerKey.toPublicKey());
-        zkApp.deploy();
+        await zkApp.deploy();
       }
     );
 
