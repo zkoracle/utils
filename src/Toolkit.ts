@@ -30,7 +30,7 @@ export class Toolkit {
 
   public static async processTx(
     config: any,
-    sentTx: Mina.Transaction,
+    sentTx: Mina.Transaction<false, false>,
     keys: PrivateKey[],
     tag: string
   ) {
@@ -40,7 +40,7 @@ export class Toolkit {
     /**
      * note: this tx needs to be signed with `tx.sign()`, because `deploy` uses `requireSignature()` under the hood,
      * so one of the account updates in this tx has to be authorized with a signature (vs proof).
-     * this is necessary for the deploy tx because the initial permissions for all account fields are "signature".
+     * this is necessary for the deployment tx because the initial permissions for all account fields are "signature".
      * (but `deploy()` changes some of those permissions to "proof" and adds the verification key that enables proofs.
      * that's why we don't need `tx.sign()` for the later transactions.)
      */
@@ -161,7 +161,7 @@ export class Toolkit {
     // await fs.mkdir("keys");
     if (!(await this.isFileExists(fs, path))) {
       const feePayerPrivateKey = (await Lightnet.acquireKeyPair()).privateKey;
-      const feePayerAccount = feePayerPrivateKey.toPublicKey();
+      // const feePayerAccount = feePayerPrivateKey.toPublicKey();
 
       await this.storePrivateKey(fs, path, feePayerPrivateKey);
 
