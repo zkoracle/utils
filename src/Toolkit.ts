@@ -7,8 +7,7 @@ import {
   SmartContract,
   UInt32,
   fetchAccount,
-
-} from 'o1js';
+} from "o1js";
 
 export class Toolkit {
   Toolkit() {}
@@ -17,11 +16,11 @@ export class Toolkit {
     console.log(graphQlUrl);
 
     const txnBroadcastServiceName = new URL(graphQlUrl).hostname
-      .split('.')
-      .filter((item) => item === 'minascan' || item === 'minaexplorer')?.[0];
+      .split(".")
+      .filter((item) => item === "minascan" || item === "minaexplorer")?.[0];
     const networkName = new URL(graphQlUrl).hostname
-      .split('.')
-      .filter((item) => item === 'berkeley' || item === 'testworld')?.[0];
+      .split(".")
+      .filter((item) => item === "berkeley" || item === "testworld")?.[0];
     if (txnBroadcastServiceName && networkName) {
       return `https://minascan.io/${networkName}/tx/${txnHash}?type=zk-tx`;
     }
@@ -34,7 +33,7 @@ export class Toolkit {
     keys: PrivateKey[],
     tag: string
   ) {
-    console.log('Build transaction and create proof...');
+    console.log("Build transaction and create proof...");
     await sentTx.prove();
 
     /**
@@ -44,7 +43,7 @@ export class Toolkit {
      * (but `deploy()` changes some of those permissions to "proof" and adds the verification key that enables proofs.
      * that's why we don't need `tx.sign()` for the later transactions.)
      */
-    console.log('Sending the transaction.');
+    console.log("Sending the transaction.");
     let pendingTx = await sentTx.sign(keys).send();
 
     if (pendingTx.hash !== undefined) {
@@ -55,7 +54,7 @@ export class Toolkit {
           `);
     }
 
-    console.log('Waiting for transaction inclusion in a block.');
+    console.log("Waiting for transaction inclusion in a block.");
     await pendingTx.wait({ maxAttempts: 90 });
 
     if (pendingTx?.hash !== undefined) {
@@ -79,11 +78,11 @@ export class Toolkit {
   public static async initialFeePayer(fs: any, network: string, tag: string) {
     let feePayerBase58;
 
-    if (network !== 'lightnet') {
+    if (network !== "lightnet") {
       feePayerBase58 = await this.initialKey(
         fs,
         `keys/${tag}-feePayer.key`,
-        'feePayerPrivateKey'
+        "feePayerPrivateKey"
       );
       const feePayerPrivateKey = PrivateKey.fromBase58(
         feePayerBase58.privateKey
@@ -113,28 +112,28 @@ export class Toolkit {
     let player1PrivateKey;
     let player2PrivateKey;
 
-    if (network !== 'lightnet') {
+    if (network !== "lightnet") {
       const player1Keys = await this.initialKey(
         fs,
         `keys/${tag}-player1.key`,
-        'player1PrivateKey'
+        "player1PrivateKey"
       );
       player1PrivateKey = PrivateKey.fromBase58(player1Keys.privateKey);
       console.log(`Load player1PrivateKey ... `);
       const player2Keys = await this.initialKey(
         fs,
         `keys/${tag}-player2.key`,
-        'playerPrivateKey'
+        "playerPrivateKey"
       );
       player2PrivateKey = PrivateKey.fromBase58(player2Keys.privateKey);
       console.log(`Load player2PrivateKey ... `);
     } else {
       // Player setup
       player1PrivateKey = (await Lightnet.acquireKeyPair()).privateKey;
-      console.log('Acquire player1PrivateKey ...');
+      console.log("Acquire player1PrivateKey ...");
 
       player2PrivateKey = (await Lightnet.acquireKeyPair()).privateKey;
-      console.log('Acquire player2PrivateKey ...');
+      console.log("Acquire player2PrivateKey ...");
     }
 
     return {
@@ -165,11 +164,11 @@ export class Toolkit {
 
       await this.storePrivateKey(fs, path, feePayerPrivateKey);
 
-      console.log('Acquire feePayerPrivateKey ...');
+      console.log("Acquire feePayerPrivateKey ...");
     }
 
     let feePayerKeysBase58: { privateKey: string; publicKey: string } =
-      JSON.parse(await fs.readFile(path, 'utf8'));
+      JSON.parse(await fs.readFile(path, "utf8"));
 
     return feePayerKeysBase58;
   }
@@ -185,14 +184,14 @@ export class Toolkit {
     }
 
     let zkAppKeysBase58: { privateKey: string; publicKey: string } = JSON.parse(
-      await fs.readFile(path, 'utf8')
+      await fs.readFile(path, "utf8")
     );
 
     return zkAppKeysBase58;
   }
 
   public static async initialZkAppKey(fs: any, path: string) {
-    return this.initialKey(fs, path, 'zkAppPrivateKey');
+    return this.initialKey(fs, path, "zkAppPrivateKey");
   }
 
   public static async displayEvents(
@@ -217,7 +216,7 @@ export class Toolkit {
     tag: string
   ) {
     // Create a new instance of the contract
-    console.log('\n\n====== DEPLOYING ======\n\n');
+    console.log("\n\n====== DEPLOYING ======\n\n");
     const sentTx = await Mina.transaction(
       { sender: feePayerKey.toPublicKey(), fee: config.fee },
       async () => {
