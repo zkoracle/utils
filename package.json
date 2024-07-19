@@ -1,6 +1,6 @@
 {
   "name": "@zkoracle/utils",
-  "version": "0.0.20",
+  "version": "0.1.20",
   "description": "utils for zkoracle.",
   "author": "ubinix-warun",
   "license": "Apache-2.0",
@@ -16,6 +16,8 @@
   "scripts": {
     "build": "tsc",
     "distclean": "rm -R node_modules build pnpm-lock.yaml ; pnpm install",
+    "cleanbuild": "rm -R node_modules build pnpm-lock.yaml; npm i; npm run build",
+    "fmtpublish": "npm run fmt; npm publish",
     "distclean-pnpm2npm": "rm -R node_modules build pnpm-lock.yaml ; npm install",
     "buildw": "tsc --watch",
     "coverage": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
